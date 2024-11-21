@@ -47,10 +47,11 @@ class UserController
 
                 // Authenticate user
                 $user = $this->userService->loginUser($username, $password);
-
+                $roles = $this->userService->getRolesByUserId($user['u_id']);
                 // Start a session and store user data
                 session_start();
                 $_SESSION['user'] = $user;
+                $_SESSION['roles'] = $roles;
 
                 $_SESSION['flash_message'] = "Login successful! Hi, " . htmlspecialchars($user['username']) . "!";
 

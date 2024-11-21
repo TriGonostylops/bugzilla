@@ -104,4 +104,31 @@ class UserService
             throw new Exception("Unable to fetch roles: " . $e->getMessage());
         }
     }
+    public function getRolesByUserId($userId)
+    {
+        try {
+            // Fetch roles associated with the user from the role_user table
+            $stmt = $this->db->prepare("
+            SELECT r.role 
+            FROM roles r
+            JOIN role_user ru ON r.r_id = ru.r_id
+            WHERE ru.u_id = ?
+        ");
+            $stmt->execute([$userId]);
+
+            // Fetch all roles associated with the user
+            $rolesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Extract the role names into an array
+            $roles = [];
+            foreach ($rolesData as $row) {
+                $roles[] = $row['role'];  // Only extract the 'role' field from the result
+            }
+
+            return $roles;
+        } catch (PDOException $e) {
+            throw new Exception("Unable to fetch roles: " . $e->getMessage());
+        }
+    }
+
 }

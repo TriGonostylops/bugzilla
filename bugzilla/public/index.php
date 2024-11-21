@@ -4,17 +4,18 @@ session_start();
 include '../views/navbar.php';
 require_once '../controllers/IndexController.php';
 require_once '../controllers/UserController.php';
-
+require_once '../controllers/BugController.php';
 // BaseController class to manage common initialization
 abstract class BaseController
 {
     protected $userController;
     protected $indexController;
-
+    protected $bugController;
     public function __construct()
     {
         $this->userController = new UserController();
         $this->indexController = new IndexController();
+        $this->bugController = new BugController();
     }
 }
 
@@ -23,6 +24,7 @@ class FrontController extends BaseController
 {
     public function route($action)
     {
+        $this->isSessionActive();
         switch ($action) {
             case 'index':
                 $this->indexController->index();
@@ -37,6 +39,9 @@ class FrontController extends BaseController
                 break;
             case 'logout':
                 $this->userController->logout();
+                break;
+            case 'reportBug':
+                $this->bugController->submitBugReport();
                 break;
             default:
                 $this->show404();
