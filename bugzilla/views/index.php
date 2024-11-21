@@ -7,8 +7,12 @@
 </head>
 <body>
 <h1>Welcome to the Index Page!</h1>
-<p>Here you can navigate to different sections of the app.</p>
-<a href="index.php?action=register">Register</a><br>
-<a href="index.php?action=login">Login</a>
+<?php
+if (isset($_SESSION['flash_message'])) {
+    echo "<p>" . $_SESSION['flash_message'] . "</p>";
+
+    unset($_SESSION['flash_message']);
+}
+?>
 </body>
 </html>

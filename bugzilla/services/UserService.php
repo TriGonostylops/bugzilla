@@ -46,6 +46,34 @@ class UserService
         return true;
     }
 
+    public function loginUser($username, $password)
+    {
+        try {
+            // Check if user exists by username
+            $stmt = $this->db->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt->execute([$username]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$user) {
+                throw new Exception("User not found.");
+            }
+
+            // Verify password
+            if (!password_verify($password, $user['password'])) {
+                throw new Exception("Invalid credentials.");
+            }
+
+            // Return user data (excluding password for security)
+            return [
+                'u_id' => $user['u_id'],
+                'username' => $user['username'],
+                'email' => $user['email']
+            ];
+        } catch (Exception $e) {
+            throw new Exception("Login failed: " . $e->getMessage());
+        }
+    }
+
     private function assignRolesToUser($userId, $roles)
     {
         $stmt = $this->db->prepare("INSERT INTO role_user (u_id, r_id) VALUES (?, ?)");
