@@ -1,39 +1,34 @@
 <?php
 
-/**
- * UserController Class
- *
- * This class handles user-related operations.
- */
+require_once '../models/User.php';
+require_once '../services/UserService.php';
+
 class UserController
 {
-    /**
-     * @var UserService $userService The instance of UserService used for user-related operations.
-     */
-    private $userService;
-
-    /**
-     * Constructor for UserController.
-     *
-     * @param UserService $userService The UserService dependency injected into the controller.
-     */
-    public function __construct($userService)
+    public function register()
     {
-        $this->userService = $userService;
-    }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Receive POST data
+            $username = trim($_POST['username']);
+            $email = trim($_POST['email']);
+            $password = trim($_POST['password']);
+            $roles = [];
 
-    /**
-     * List all users and render the userList view.
-     *
-     * @throws Exception If there is an error fetching users.
-     */
-    public function listUsers()
-    {
-        try {
-            $users = $this->userService->getAllUsers(); // Fetch users from UserService
-            require '../views/userList.php'; // Include the view file
-        } catch (Exception $e) {
-            throw new Exception('Error fetching users: ' . $e->getMessage());
+            //TODO: Validation checks here-->
+
+            foreach ($_POST['roles'] as $roleId) {
+                $roles[] = new Role($roleId, null);
+            }
+            $userService = new UserService();
+
+            try {
+                $userService->registerUser($username, $email, $password, $roles);
+                header("Location: index.php?action=success"); // Redirect on successful registration
+            } catch (Exception $e) {
+                echo 'Error: ' . $e->getMessage();
+            }
+        } else {
+            include '../views/register.php';  // Show form if not POST request
         }
     }
 }

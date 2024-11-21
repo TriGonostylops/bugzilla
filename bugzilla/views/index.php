@@ -1,20 +1,14 @@
+<!-- views/index.php -->
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Index Page</title>
 </head>
-
 <body>
-<!-- Main heading of the page -->
-<h1>Welcome to the database!</h1>
-
-<!-- Unordered list containing navigation links -->
-<ul>
-    <li><a href="index.php?action=userList">User List</a></li>
-    <li><a href="index.php?action=advertisementList">Advertisement List</a></li>
-</ul>
+<h1>Welcome to the Index Page!</h1>
+<p>Here you can navigate to different sections of the app.</p>
+<a href="index.php?action=register">Register</a><br>
+<a href="index.php?action=login">Login</a>
 </body>
 </html>

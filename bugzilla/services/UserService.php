@@ -2,50 +2,78 @@
 
 require_once '../config/database.php';
 require_once '../models/User.php';
+require_once '../models/Role.php';
 
-/**
- * UserService Class
- *
- * This class interacts with the database to perform operations related to users.
- */
 class UserService
 {
-    /**
-     * @var PDO $db The PDO database connection instance.
-     */
     private $db;
 
-    /**
-     * Constructor to initialize UserService and establish a database connection.
-     */
     public function __construct()
     {
-        $this->db = Database::getInstance()->getConnection();
+        try {
+            $this->db = Database::getInstance()->getConnection();
+        } catch (Exception $e) {
+            throw new Exception("Database connection error.");
+        }
     }
 
-    /**
-     * Fetches all users from the database.
-     *
-     * @return array An array of User objects representing fetched users.
-     * @throws PDOException If there is a PDO-related database error.
-     */
-    public function getAllUsers()
+    public function registerUser($username, $email, $password, $roles)
+    {
+        if (empty($username) || empty($email) || empty($password)) {
+            throw new Exception("All fields are required.");
+        }
+
+        // Check if email already exists
+        $stmt = $this->db->prepare("SELECT u_id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        if ($stmt->rowCount() > 0) {
+            throw new Exception("Email is already registered.");
+        }
+
+        // Hash password
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+        // Insert user into database
+        $stmt = $this->db->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+        $stmt->execute([$username, $email, $hashedPassword]);
+
+        // Get the inserted user ID
+        $userId = $this->db->lastInsertId();
+
+        // Assign roles
+        $this->assignRolesToUser($userId, $roles);
+
+        return true;
+    }
+
+    private function assignRolesToUser($userId, $roles)
+    {
+        $stmt = $this->db->prepare("INSERT INTO role_user (u_id, r_id) VALUES (?, ?)");
+
+        foreach ($roles as $role) {
+            if ($role instanceof Role) {
+                $stmt->execute([$userId, $role->getId()]);
+            } else {
+                throw new Exception("Invalid role provided.");
+            }
+        }
+    }
+
+    public function getAllRoles()
     {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM users");
+            $stmt = $this->db->prepare("SELECT * FROM roles");
             $stmt->execute();
+            $roleData = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $users = [];
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $user = new User($row['id'], $row['name']);
-                $users[] = $user;
+            $roles = [];
+            foreach ($roleData as $row) {
+                $roles[] = new Role($row['r_id'], $row['role']);
             }
 
-            return $users;
-
+            return $roles;
         } catch (PDOException $e) {
-            // Re-throw the exception to handle it at a higher level
-            throw new PDOException('Error fetching users: ' . $e->getMessage());
+            throw new Exception("Unable to fetch roles: " . $e->getMessage());
         }
     }
 }

@@ -1,57 +1,33 @@
 <?php
 
-/**
- * Entry Point for MVC Application
- *
- * This file serves as the entry point for the MVC application. It routes requests
- * to the appropriate controllers based on the 'action' parameter in the URL.
- *
- * PHP version 8.2.12
- */
-
-// Include necessary files and services
+// Autoloading controllers (make sure to include all necessary files)
 require_once '../controllers/IndexController.php';
 require_once '../controllers/UserController.php';
-require_once '../controllers/AdvertisementController.php';
-require_once '../services/UserService.php';
-require_once '../services/AdvertisementService.php';
 
-/**
- * Instantiate service classes
- */
-$userService = new UserService();
-$advertisementService = new AdvertisementService();
+// Get the action from the query string (or default to 'index')
+$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'index';
 
-/**
- * Instantiate controller classes with injected dependencies
- */
-$indexController = new IndexController();
-$userController = new UserController($userService);
-$advertisementController = new AdvertisementController($advertisementService);
+// Instantiate the appropriate controller based on the action
+switch ($action) {
+    case 'index':
+        // Instantiate the Index controller and call the index method
+        $controller = new IndexController();
+        $controller->index();
+        break;
 
-/**
- * Handle actions based on request parameters
- *
- * @var string $action The action parameter from the URL. If the parameter is faulty it redirects the user to the entry point.
- */
-$action = isset($_GET['action']) ? $_GET['action'] : 'index';
+    case 'register':
+        // Instantiate the User controller and call the register method
+        $controller = new UserController();
+        $controller->register();
+        break;
 
-try {
-    switch ($action) {
-        case 'index':
-            // Handle the index action
-            $indexController->index();
-            break;
-        case 'userList':
-            // Handle the user list action
-            $userController->listUsers();
-            break;
-        case 'advertisementList':
-            // Handle the advertisement list action
-            $advertisementController->listAdvertisements();
-            break;
-    }
-} catch (Exception $e) {
-    // Handle any exceptions
-    echo 'Exception caught: ' . $e->getMessage();
+    case 'login':
+        // Instantiate the User controller and call the login method
+        $controller = new UserController();
+        $controller->login();
+        break;
+
+    default:
+        echo "404 - Action not found.";
+        break;
 }

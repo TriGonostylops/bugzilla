@@ -1,51 +1,52 @@
 <?php
 
-/**
- * Class User
- *
- * Represents a user with their properties.
- */
 class User
 {
-    /**
-     * @var int $id The unique identifier of the user.
-     */
-    public $id;
+    private $u_id;
+    private $username;
+    private $email;
+    private $password;
 
-    /**
-     * @var string $name The name of the user.
-     */
-    public $name;
-
-    /**
-     * User constructor.
-     *
-     * @param int $id The unique identifier of the user.
-     * @param string $name The name of the user.
-     */
-    public function __construct($id, $name)
+    public function __construct($u_id, $username, $email, $password)
     {
-        $this->id = $id;
-        $this->name = $name;
+        $this->u_id = $u_id;
+        $this->username = $username;
+        $this->email = $email;
+        $this->password = $password;
     }
 
-    /**
-     * Get the ID of the user.
-     *
-     * @return int The ID of the user.
-     */
     public function getId()
     {
-        return $this->id;
+        return $this->u_id;
     }
 
-    /**
-     * Get the name of the user.
-     *
-     * @return string The name of the user.
-     */
-    public function getName()
+    public function getUsername()
     {
-        return $this->name;
+        return $this->username;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
     }
 }
