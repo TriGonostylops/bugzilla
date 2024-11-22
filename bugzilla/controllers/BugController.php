@@ -141,5 +141,52 @@ class BugController
         header("Location: index.php");
         exit();
     }
+    public function approvePatch()
+    {
+        if (!isset($_SESSION['user']) || !in_array('tester', $_SESSION['roles'])) {
+            $_SESSION['flash_message'] = "You must be a tester to approve patches.";
+            header("Location: index.php?action=viewBug&b_id=" . $_GET['bug_id']);
+            exit();
+        }
+
+        if (isset($_GET['patch_id'], $_GET['bug_id'])) {
+            $patchId = $_GET['patch_id'];
+            $bugId = $_GET['bug_id'];
+            $userId = $_SESSION['user']['u_id'];
+
+            // Check if the user has already approved the patch
+            $alreadyApproved = $this->patchService->checkIfUserApprovedPatch($patchId, $userId);
+            if ($alreadyApproved) {
+                $_SESSION['flash_message'] = "You have already approved this patch.";
+                header("Location: index.php?action=viewBug&b_id=" . $_GET['bug_id']);
+            }
+
+            // Check if the user is the one who submitted the patch (they shouldn't approve their own patch)
+            $patch = $this->patchService->getPatchById($patchId);
+            if ($patch['u_id'] == $userId) {
+                $_SESSION['flash_message'] = "You cannot approve your own patch.";
+                header("Location: index.php?action=viewBug&b_id=" . $_GET['bug_id']);
+                exit();
+            }
+
+            // Insert the approval into the database
+            $this->patchService->approvePatch($patchId, $userId);
+
+            // Check if the patch has 3 approvals, and approve the patch if it does
+            $approvalCount = $this->patchService->getPatchApprovalCount($patchId);
+            if ($approvalCount >= 3) {
+                $this->patchService->setPatchApproved($patchId);
+            }
+
+            $_SESSION['flash_message'] = "Patch approved successfully.";
+            header("Location: index.php?action=viewBug&b_id=" . $_GET['bug_id']);
+            exit();
+        }
+
+        $_SESSION['flash_message'] = "Invalid request.";
+        header("Location: index.php?action=index");
+        exit();
+    }
+
 
 }

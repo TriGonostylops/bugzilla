@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../public/styles/styles.css"
     <meta charset="UTF-8">
     <title>Index Page</title>
 </head>

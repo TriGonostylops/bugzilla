@@ -51,8 +51,10 @@ class FrontController extends BaseController
                 $this->bugController->addComment();
                 break;
             case 'add_patch':
-                $controller = new BugController();
-                $controller->addPatch();
+                $this->bugController->addPatch();
+                break;
+            case 'approve_patch':
+                $this->bugController->approvePatch();
                 break;
             default:
                 $this->show404();

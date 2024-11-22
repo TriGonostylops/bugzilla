@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="../public/styles/styles.css"
     <meta charset="UTF-8">
     <title>Bug Details</title>
 </head>
@@ -38,6 +39,36 @@
         <p><a href="index.php?action=login">Log in</a> to leave a patch.</p>
     <?php endif; ?>
 
+    <!-- Patches Section -->
+    <h3>Patches</h3>
+    <?php
+// Fetch patches using the method from PatchService
+    $patches = $this->patchService->getPatchesByBugId($bug['b_id']);
+    if ($patches): ?>
+        <ul>
+            <?php foreach ($patches as $patch): ?>
+                <li>
+                    <p><strong><?= htmlspecialchars($patch['username']); ?></strong> patched:</p>
+                    <p><em><?= htmlspecialchars($patch['date']); ?></em></p>
+                    <p><strong>Message:</strong> <?= htmlspecialchars($patch['message']); ?></p>
+                    <pre><code><?= htmlspecialchars($patch['code']); ?></code></pre>
+
+                    <?php if (isset($_SESSION['user']) && (in_array('tester', $_SESSION['roles']))): ?>
+                        <?php if ($patch['is_approved'] == 0 && $patch['username'] != $_SESSION['user']['username']): ?>
+                            <form action="index.php?action=approve_patch&patch_id=<?= htmlspecialchars($patch['p_id']); ?>&bug_id=<?= htmlspecialchars($bug['b_id']); ?>" method="post">
+                                <button type="submit">Approve Patch</button>
+                            </form>
+                        <?php else: ?>
+                            <p>This patch has already been approved or you cannot approve your own patch.</p>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </li>
+                <hr>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <p>No patches yet. Be the first to submit a patch!</p>
+    <?php endif; ?>
     <!-- Comments Section -->
     <h3>Comments</h3>
     <?php if ($comments): ?>
