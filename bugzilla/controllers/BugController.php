@@ -1,6 +1,7 @@
 <?php
 require_once '../services/BugService.php';
 require_once '../services/CommentService.php';
+require_once '../services/PatchService.php';
 
 require_once '../models/Bug.php';
 
@@ -8,10 +9,12 @@ class BugController
 {
     private $bugService;
     private $commentService;
+    private $patchService;
     public function __construct()
     {
         $this->bugService = new BugService();
         $this->commentService = new CommentService();
+        $this->patchService = new PatchService();
     }
 
 
@@ -102,6 +105,41 @@ class BugController
         header("Location: index.php");
         exit();
     }
+    public function addPatch()
+    {
+        if (!isset($_SESSION['user']) || !in_array('developer', $_SESSION['roles'])) {
+            header("Location: index.php?action=login");
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['code'], $_POST['message'], $_GET['bug_id']) && is_numeric($_GET['bug_id'])) {
+            $bugId = intval($_GET['bug_id']);
+            $code = trim($_POST['code']);
+            $message = trim($_POST['message']);
+            $username = $_SESSION['user']['username'];
+            $date = date('Y-m-d H:i:s');
+
+            if (empty($code) || empty($message)) {
+                $_SESSION['flash_message'] = "Patch code and message cannot be empty.";
+                header("Location: index.php?action=view_bug&bug_id=" . $bugId);
+                exit();
+            }
+
+            try {
+                $patch = new Patch($code, $message, $username, $bugId, 0, $date);
+                $this->patchService->savePatch($patch);
+
+                $_SESSION['flash_message'] = "Patch added successfully.";
+            } catch (Exception $e) {
+                $_SESSION['flash_message'] = "Error adding patch: " . $e->getMessage();
+            }
+
+            header("Location: index.php?action=viewBug&b_id=" . $bugId);
+            exit();
+        }
+
+        header("Location: index.php");
+        exit();
+    }
 
 }
-

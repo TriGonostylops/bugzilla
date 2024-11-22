@@ -1,0 +1,91 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Styling for Bug Details Section */
+#bug-details {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Styling for comments */
+.comment {
+    background-color: #f1f1f1;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border-left: 4px solid #ccc;
+}
+
+.comment p {
+    margin: 0;
+}
+
+/* Styling for patches */
+.patch {
+    background-color: #e7f3fe;
+    border-left: 4px solid #007bff;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.patch pre {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: "Courier New", monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Styling for Patch Form */
+#patch-form {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#patch-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    resize: vertical;
+}
+
+#patch-form button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#patch-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Flash message styling */
+.flash-message {
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.flash-message.error {
+    background-color: #dc3545;
+}

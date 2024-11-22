@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1>Bug Details</h1>
+
 <?php if ($bug): ?>
     <p><strong>Username:</strong> <?= htmlspecialchars($bug['username']) ?></p>
     <p><strong>Title:</strong> <?= htmlspecialchars($bug['title']) ?></p>
@@ -25,9 +26,21 @@
         <p><a href="index.php?action=login">Log in</a> to leave a comment.</p>
     <?php endif; ?>
 
+    <!-- Allow Developer to Leave a Patch -->
+    <?php if (isset($_SESSION['user']) && in_array('developer', $_SESSION['roles'])): ?>
+        <h3>Leave a Patch</h3>
+        <form action="index.php?action=add_patch&bug_id=<?= htmlspecialchars($bug['b_id']); ?>" method="post">
+            <textarea name="code" rows="4" cols="50" placeholder="Enter your patch code here..." required></textarea><br>
+            <textarea name="message" rows="4" cols="50" placeholder="Leave a message about the patch..." required></textarea><br>
+            <button type="submit">Submit Patch</button>
+        </form>
+    <?php else: ?>
+        <p><a href="index.php?action=login">Log in</a> to leave a patch.</p>
+    <?php endif; ?>
+
     <!-- Comments Section -->
     <h3>Comments</h3>
-    <?php if (!empty($comments)): ?>
+    <?php if ($comments): ?>
         <ul>
             <?php foreach ($comments as $comment): ?>
                 <li>
@@ -45,6 +58,7 @@
 <?php else: ?>
     <p>Bug not found.</p>
 <?php endif; ?>
+
 <a href="index.php?action=index">Back to Index</a>
 </body>
 </html>
