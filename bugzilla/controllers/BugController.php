@@ -1,14 +1,17 @@
 <?php
 require_once '../services/BugService.php';
+require_once '../services/CommentService.php';
+
 require_once '../models/Bug.php';
 
 class BugController
 {
     private $bugService;
-
+    private $commentService;
     public function __construct()
     {
         $this->bugService = new BugService();
+        $this->commentService = new CommentService();
     }
 
 
@@ -49,5 +52,56 @@ class BugController
             include '../views/bug_report.php';
         }
     }
+    public function viewBug()
+    {
+        if (isset($_GET['b_id'])) {
+            $bugId = $_GET['b_id'];
+            try {
+                $bug = $this->bugService->getBugById($bugId);
+                $comments = $this->commentService->getCommentsByBugId($bugId);
+                include '../views/view_bug.php';
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
+            }
+        } else {
+            echo "Bug ID not provided.";
+        }
+    }
+    public function addComment()
+    {
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?action=login");
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'], $_GET['bug_id']) && is_numeric($_GET['bug_id'])) {
+            $bugId = intval($_GET['bug_id']);
+            $message = trim($_POST['message']);
+            $username = $_SESSION['user']['username'];
+            $date = date('Y-m-d H:i:s');
+
+            if (empty($message)) {
+                $_SESSION['flash_message'] = "Comment cannot be empty.";
+                header("Location: index.php?action=view_bug&bug_id=" . $bugId);
+                exit();
+            }
+
+            try {
+                $comment = new Comment($message, $username, $bugId, $date); // Pass bug_id to Comment
+                $this->commentService->saveComment($comment);
+
+                $_SESSION['flash_message'] = "Comment added successfully.";
+            } catch (Exception $e) {
+                $_SESSION['flash_message'] = "Error adding comment: " . $e->getMessage();
+            }
+
+            header("Location: index.php?action=viewBug&b_id=" . $bugId);
+            exit();
+        }
+
+        header("Location: index.php");
+        exit();
+    }
+
 }
-?>
+

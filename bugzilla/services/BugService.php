@@ -33,6 +33,25 @@ class BugService
             throw new Exception("Error saving bug report: " . $e->getMessage());
         }
     }
-
+    public function getAllBugs()
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT b_id, username, title, date FROM bugs ORDER BY date DESC");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new Exception("Error fetching bugs: " . $e->getMessage());
+        }
+    }
+    public function getBugById($bugId)
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM bugs WHERE b_id = :b_id");
+            $stmt->bindValue(':b_id', $bugId, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new Exception("Error fetching bug details: " . $e->getMessage());
+        }
+    }
 }
-?>

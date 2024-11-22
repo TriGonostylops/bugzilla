@@ -5,12 +5,13 @@ include '../views/navbar.php';
 require_once '../controllers/IndexController.php';
 require_once '../controllers/UserController.php';
 require_once '../controllers/BugController.php';
-// BaseController class to manage common initialization
+
 abstract class BaseController
 {
     protected $userController;
     protected $indexController;
     protected $bugController;
+
     public function __construct()
     {
         $this->userController = new UserController();
@@ -43,6 +44,12 @@ class FrontController extends BaseController
             case 'reportBug':
                 $this->bugController->submitBugReport();
                 break;
+            case 'viewBug':
+                $this->bugController->viewBug();
+                break;
+            case 'add_comment':
+                $this->bugController->addComment();
+                break;
             default:
                 $this->show404();
                 break;
@@ -57,7 +64,7 @@ class FrontController extends BaseController
 
     private function show404()
     {
-        echo "404 - Action not found.";
+        echo $_REQUEST['action'] . "404 - Action not found.";
     }
 }
 
