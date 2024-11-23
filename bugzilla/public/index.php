@@ -30,11 +30,12 @@ class FrontController extends BaseController
             case 'index':
                 $this->indexController->index();
                 break;
-
+            case 'search':
+                $this->indexController->search();
+                break;
             case 'register':
                 $this->userController->register();
                 break;
-
             case 'login':
                 $this->userController->login();
                 break;

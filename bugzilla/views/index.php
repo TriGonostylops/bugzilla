@@ -16,6 +16,13 @@ if (isset($_SESSION['flash_message'])) {
 }
 ?>
 
+<!-- Search Bar -->
+<form method="get" action="index.php">
+    <input type="hidden" name="action" value="search">
+    <input type="text" name="query" placeholder="Search by username or title" required>
+    <button type="submit">Search</button>
+</form>
+
 <h2>Reported Bugs</h2>
 
 <?php if (!empty($bugs)): ?>

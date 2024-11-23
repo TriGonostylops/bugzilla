@@ -24,7 +24,7 @@
             <button type="submit">Submit Comment</button>
         </form>
     <?php else: ?>
-        <p><a href="index.php?action=login">Log in</a> to leave a comment.</p>
+        <p><a href="index.php?action=login">Log in</a> to leave a comment or patch.</p>
     <?php endif; ?>
 
     <!-- Allow Developer to Leave a Patch -->
@@ -35,8 +35,6 @@
             <textarea name="message" rows="4" cols="50" placeholder="Leave a message about the patch..." required></textarea><br>
             <button type="submit">Submit Patch</button>
         </form>
-    <?php else: ?>
-        <p><a href="index.php?action=login">Log in</a> to leave a patch.</p>
     <?php endif; ?>
 
     <!-- Patches Section -->
@@ -44,7 +42,7 @@
     <?php
 // Fetch patches using the method from PatchService
     $patches = $this->patchService->getPatchesByBugId($bug['b_id']);
-    if ($patches): ?>
+    if ($patches || in_array('developer', $_SESSION['roles'])): ?>
         <ul>
             <?php foreach ($patches as $patch): ?>
                 <li>
@@ -67,7 +65,7 @@
             <?php endforeach; ?>
         </ul>
     <?php else: ?>
-        <p>No patches yet. Be the first to submit a patch!</p>
+        <p>No patches yet.</p>
     <?php endif; ?>
     <!-- Comments Section -->
     <h3>Comments</h3>

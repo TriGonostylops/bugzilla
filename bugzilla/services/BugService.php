@@ -54,4 +54,21 @@ class BugService
             throw new Exception("Error fetching bug details: " . $e->getMessage());
         }
     }
+    public function searchBugs($query)
+    {
+        try {
+            $stmt = $this->db->prepare(
+                "SELECT * FROM bugs 
+             WHERE LOWER(username) LIKE LOWER(:query) 
+             OR LOWER(title) LIKE LOWER(:query) 
+             ORDER BY title ASC, date DESC"
+            );
+            $stmt->bindValue(':query', '%' . strtolower($query) . '%', PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new Exception("Error searching bugs: " . $e->getMessage());
+        }
+    }
+
 }
