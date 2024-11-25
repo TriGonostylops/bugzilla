@@ -84,10 +84,28 @@ class UserController
         }
 
         $username = $_SESSION['user']['username'];
+        $userId = $_SESSION['user']['u_id'];
 
         try {
             // Fetch user details
             $user = $this->userService->getUserByUsername($username);
+
+            // Fetch roles for the user
+            $roles = $this->userService->getRolesByUserId($userId);
+
+            // Initialize statistics
+            $patchesCount = 0;
+            $acceptedPatchesCount = 0;
+
+            // Check if user has 'developer' role and count patches
+            if (in_array('developer', $roles)) {
+                $patchesCount = $this->userService->countPatchesByUser($username);
+            }
+
+            // Check if user has 'tester' role and count accepted patches
+            if (in_array('tester', $roles)) {
+                $acceptedPatchesCount = $this->userService->countAcceptedPatchesByUser($userId);
+            }
 
             // Fetch bug reports submitted by the user
             $bugs = $this->userService->getBugsByUsername($username);

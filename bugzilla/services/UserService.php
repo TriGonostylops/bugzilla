@@ -152,5 +152,28 @@ class UserService
             throw new Exception("Error fetching user's bug reports: " . $e->getMessage());
         }
     }
-
+    public function countPatchesByUser($username)
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT COUNT(*) AS patch_count FROM patches WHERE username = :username");
+            $stmt->bindValue(':username', $username, PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['patch_count'];
+        } catch (Exception $e) {
+            throw new Exception("Error counting patches: " . $e->getMessage());
+        }
+    }
+    public function countAcceptedPatchesByUser($userId)
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT COUNT(*) AS accepted_patch_count FROM accepted_patches WHERE u_id = :u_id");
+            $stmt->bindValue(':u_id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['accepted_patch_count'];
+        } catch (Exception $e) {
+            throw new Exception("Error counting accepted patches: " . $e->getMessage());
+        }
+    }
 }

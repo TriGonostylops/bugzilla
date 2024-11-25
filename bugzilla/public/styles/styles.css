@@ -4,77 +4,14 @@ body {
     background-color: #f4f4f4;
     margin: 0;
     padding: 20px;
+    line-height: 1.6;
 }
 
-/* Styling for Bug Details Section */
-#bug-details {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Header styling */
+header h1 {
+    text-align: center;
+    font-size: 2rem;
     margin-bottom: 20px;
-}
-
-/* Styling for comments */
-.comment {
-    background-color: #f1f1f1;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border-left: 4px solid #ccc;
-}
-
-.comment p {
-    margin: 0;
-}
-
-/* Styling for patches */
-.patch {
-    background-color: #e7f3fe;
-    border-left: 4px solid #007bff;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-}
-
-.patch pre {
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-radius: 5px;
-    font-family: "Courier New", monospace;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
-
-/* Styling for Patch Form */
-#patch-form {
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#patch-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-family: Arial, sans-serif;
-    resize: vertical;
-}
-
-#patch-form button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#patch-form button:hover {
-    background-color: #0056b3;
 }
 
 /* Flash message styling */
@@ -84,8 +21,387 @@ body {
     color: white;
     border-radius: 5px;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .flash-message.error {
     background-color: #dc3545;
+}
+
+/* Search bar styling */
+#search-bar .search-form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#search-bar input[type="text"] {
+    padding: 10px;
+    font-size: 1rem;
+    margin-right: 10px;
+    width: 60%;
+    max-width: 400px;
+}
+
+#search-bar button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#search-bar button:hover {
+    background-color: #0056b3;
+}
+
+/* Bugs Table styling */
+#bugs-section .bugs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#bugs-section .bugs-table th,
+#bugs-section .bugs-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#bugs-section .bugs-table th {
+    background-color: #f4f4f4;
+}
+
+#bugs-section .bugs-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Link styling for bug details */
+.bug-link {
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+}
+
+.bug-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    #search-bar input[type="text"] {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    #search-bar .search-form {
+        flex-direction: column;
+    }
+
+    .bugs-table th, .bugs-table td {
+        padding: 8px 10px;
+    }
+
+    .bugs-table {
+        font-size: 0.9rem;
+    }
+}
+/* Navbar Styling */
+.navbar {
+    background-color: #007bff;
+    padding: 10px 0;
+}
+
+.nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.nav-list li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.nav-link:hover {
+    background-color: #0056b3;
+    border-radius: 5px;
+}
+/* Form Section Styling */
+.form-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.form button:hover {
+    background-color: #0056b3;
+}
+/* Flash Message */
+.flash-message {
+    color: red;
+    font-size: 16px;
+}
+
+/* Bug Report Form */
+.bug-report-form {
+    max-width: 500px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bug-report-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.bug-report-form input, .bug-report-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.bug-report-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.bug-report-form button:hover {
+    background-color: #0056b3;
+}
+/* Profile Page Styling */
+.profile-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.profile-section h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.profile-section p {
+    font-size: 1.1em;
+    margin: 8px 0;
+}
+
+/* Bug Reports Section */
+.bug-reports-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bug-reports-section h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+/* Bug Reports Table */
+.reports-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.reports-table th, .reports-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.reports-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.reports-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Button Styling (Back to Index) */
+a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+a:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+    .profile-section, .bug-reports-section {
+        padding: 15px;
+    }
+
+    .reports-table th, .reports-table td {
+        font-size: 0.9em;
+    }
+
+    a {
+        font-size: 0.9em;
+        padding: 8px 16px;
+    }
+}
+/* General styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Bug info styling */
+#bug-info {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Comment, Patch, and Patches Section Styling */
+section {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Textarea and Form Styling */
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Buttons Styling */
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Back Link */
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Additional Styling for Patches and Comments */
+code {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: "Courier New", monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* List Styling */
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li {
+    padding: 10px 0;
+}
+/* Profile Information Styling */
+#profile-info, #user-stats {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#user-stats p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+#user-stats h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
 }

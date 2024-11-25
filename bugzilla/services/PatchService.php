@@ -99,4 +99,61 @@ class PatchService
             throw new Exception("Error updating patch approval: " . $e->getMessage());
         }
     }
+    public function getPatchStatistics($interval)
+    {
+        try {
+            $query = "SELECT COUNT(*) AS total FROM patches WHERE DATE(date) >= CURDATE() - INTERVAL :interval DAY";
+            $stmt = $this->db->prepare($query);
+
+            switch ($interval) {
+                case 'daily':
+                    $stmt->bindValue(':interval', 1, PDO::PARAM_INT);
+                    break;
+                case 'weekly':
+                    $stmt->bindValue(':interval', 7, PDO::PARAM_INT);
+                    break;
+                case 'monthly':
+                    $stmt->bindValue(':interval', 30, PDO::PARAM_INT);
+                    break;
+                default:
+                    throw new Exception("Invalid interval specified.");
+            }
+
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        } catch (Exception $e) {
+            throw new Exception("Error fetching patch statistics: " . $e->getMessage());
+        }
+    }
+    public function getApprovalStatsByUsername()
+    {
+        try {
+            $stmt = $this->db->prepare("
+            SELECT p.username, COUNT(ap.p_id) AS approval_count
+            FROM patches p
+            JOIN accepted_patches ap ON p.p_id = ap.p_id
+            GROUP BY p.username
+        ");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new Exception("Error fetching approval stats: " . $e->getMessage());
+        }
+    }
+    public function getUnapprovedRecentPatches()
+    {
+        try {
+            $stmt = $this->db->prepare("
+            SELECT p.*
+            FROM patches p
+            JOIN bugs b ON p.bug_id = b.b_id
+            WHERE p.is_approved = 0
+            AND b.date >= (SELECT DATE_SUB(CURDATE(), INTERVAL 7 DAY))
+        ");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new Exception("Error fetching unapproved recent patches: " . $e->getMessage());
+        }
+    }
 }

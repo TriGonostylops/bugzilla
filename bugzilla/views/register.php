@@ -2,45 +2,55 @@
 require_once '../services/UserService.php';
 
 $userService = new UserService();
-$roles = [];
+$roles = []; // Initialize as an empty array
 
 try {
-    $roles = $userService->getAllRoles();
+    $roles = $userService->getAllRoles(); // Fetch roles
 } catch (Exception $e) {
     echo "Error fetching roles: " . $e->getMessage();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="../public/styles/styles.css"
+    <link rel="stylesheet" href="../public/styles/styles.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
 </head>
 <body>
-<h2>Register</h2>
-<form method="POST" action="index.php?action=register">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required><br><br>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required><br><br>
+<header><h2>Register</h2></header>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required><br><br>
+<!-- Flash Message (if any) -->
+<?php if (isset($_SESSION['flash_message'])): ?>
+    <div class="flash-message error">
+        <?= htmlspecialchars($_SESSION['flash_message']); ?>
+        <?php unset($_SESSION['flash_message']); ?>
+    </div>
+<?php endif; ?>
 
-    <label for="roles">Roles:</label><br>
-    <?php foreach ($roles as $role): ?>
-        <label for="checkers"> <?= htmlspecialchars($role->getRole()) ?> </label>
-        <input id="checkers" type="checkbox" name="roles[]" value="<?= htmlspecialchars($role->getId()) ?>">
-        <br>
-    <?php endforeach; ?>
-    <br>
-    <br>
+<!-- Register Form -->
+<section class="form-section">
+    <form method="POST" action="index.php?action=register" class="form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
 
-    <button type="submit">Register</button>
-</form>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="roles">Roles:</label><br>
+        <?php foreach ($roles as $role): ?>
+            <input type="checkbox" id="role<?= $role->getId() ?>" name="roles[]" value="<?= htmlspecialchars($role->getId()) ?>">
+            <label for="role<?= $role->getId() ?>"><?= htmlspecialchars($role->getRole()) ?></label><br>
+        <?php endforeach; ?>
+
+        <button type="submit">Register</button>
+    </form>
+</section>
+
 </body>
 </html>

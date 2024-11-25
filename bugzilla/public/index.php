@@ -45,6 +45,9 @@ class FrontController extends BaseController
             case 'profile':
                 $this->userController->profile();
                 break;
+            case 'statistics':
+                $this->indexController->statistics();
+                break;
             case 'reportBug':
                 $this->bugController->submitBugReport();
                 break;
