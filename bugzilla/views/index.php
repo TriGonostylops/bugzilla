@@ -10,7 +10,7 @@
 
 <!-- Header Section -->
 <header>
-    <h1>Welcome to the Index Page!</h1>
+    <h1>Welcome to Bugzilla!</h1>
 </header>
 
 <!-- Flash Message Section -->
@@ -23,17 +23,19 @@
     </div>
 <?php endif; ?>
 
+
 <!-- Search Bar -->
 <section id="search-bar">
     <form method="get" action="index.php" class="search-form">
         <input type="hidden" name="action" value="search">
-        <input type="text" name="query" placeholder="Search by username or title" required>
+        <input type="text" name="query" placeholder="Search by username or title">
         <button type="submit">Search</button>
     </form>
 </section>
 
 <!-- Reported Bugs Section -->
 <section id="bugs-section">
+
     <h2>Reported Bugs</h2>
 
     <?php if (!empty($bugs)): ?>

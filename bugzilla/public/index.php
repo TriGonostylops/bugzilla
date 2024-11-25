@@ -25,7 +25,6 @@ class FrontController extends BaseController
 {
     public function route($action)
     {
-        $this->isSessionActive();
         switch ($action) {
             case 'index':
                 $this->indexController->index();

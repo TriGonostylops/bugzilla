@@ -32,6 +32,25 @@
         <p><a href="index.php?action=login">Log in</a> to leave a comment or patch.</p>
     <?php endif; ?>
 
+
+    <!-- Comments Section -->
+    <section id="comments">
+        <h3>Comments</h3>
+        <?php if ($comments): ?>
+            <ul>
+                <?php foreach ($comments as $comment): ?>
+                    <li>
+                        <p><strong><?= htmlspecialchars($comment['username']); ?></strong> said:</p>
+                        <p><?= htmlspecialchars($comment['message']); ?></p>
+                        <p><em><?= htmlspecialchars($comment['date']); ?></em></p>
+                    </li>
+                    <hr>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p>No comments yet. Be the first to comment!</p>
+        <?php endif; ?>
+    </section>
     <!-- Patch Form (for Developers) -->
     <?php if (isset($_SESSION['user']) && in_array('developer', $_SESSION['roles'])): ?>
         <section id="patch-form">
@@ -55,10 +74,10 @@
                 <?php foreach ($patches as $patch): ?>
                     <li>
                         <p><strong><?= htmlspecialchars($patch['username']); ?></strong> patched:</p>
-                        <p><em><?= htmlspecialchars($patch['date']); ?></em></p>
                         <p><strong>Message:</strong> <?= htmlspecialchars($patch['message']); ?></p>
                         <pre><code><?= htmlspecialchars($patch['code']); ?></code></pre>
 
+                        <p><em><?= htmlspecialchars($patch['date']); ?></em></p>
                         <?php if (isset($_SESSION['user']) && in_array('tester', $_SESSION['roles'])): ?>
                             <?php if ($patch['is_approved'] == 0 && $patch['username'] != $_SESSION['user']['username']): ?>
                                 <form action="index.php?action=approve_patch&patch_id=<?= htmlspecialchars($patch['p_id']); ?>&bug_id=<?= htmlspecialchars($bug['b_id']); ?>" method="post">
@@ -74,25 +93,6 @@
             </ul>
         <?php else: ?>
             <p>No patches yet.</p>
-        <?php endif; ?>
-    </section>
-
-    <!-- Comments Section -->
-    <section id="comments">
-        <h3>Comments</h3>
-        <?php if ($comments): ?>
-            <ul>
-                <?php foreach ($comments as $comment): ?>
-                    <li>
-                        <p><strong><?= htmlspecialchars($comment['username']); ?></strong> said:</p>
-                        <p><?= htmlspecialchars($comment['message']); ?></p>
-                        <p><em><?= htmlspecialchars($comment['date']); ?></em></p>
-                    </li>
-                    <hr>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p>No comments yet. Be the first to comment!</p>
         <?php endif; ?>
     </section>
 

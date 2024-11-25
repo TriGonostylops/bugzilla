@@ -4,7 +4,12 @@
     <link rel="stylesheet" href="../public/styles/styles.css">
     <meta charset="UTF-8">
     <title>Statistics</title>
+<!--    GRAPH INCLUDE    -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!--    SWIPER INCLUDE    -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
     <style>
         .chart-container {
             margin: 20px 0;
@@ -40,7 +45,34 @@
     <p style="color: red;"><?= htmlspecialchars($_SESSION['flash_message']); ?></p>
     <?php unset($_SESSION['flash_message']); ?>
 <?php endif; ?>
-
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <h3>Daily Statistics</h3>
+            <canvas id="dailyChart"></canvas>
+        </div>
+        <div class="swiper-slide">
+            <h3>Weekly Statistics</h3>
+            <canvas id="weeklyChart"></canvas>
+        </div>
+        <div class="swiper-slide">
+            <h3>Monthly Statistics</h3>
+            <canvas id="monthlyChart"></canvas>
+        </div>
+        <div class="swiper-slide">
+            <h3>Patch Approvals by Username</h3>
+            <canvas id="approvalStatsChart"></canvas>
+        </div>
+        <div class="swiper-slide">
+            <h3>Bugs Reported by Username</h3>
+            <canvas id="bugStatsChart"></canvas>
+        </div>
+    </div>
+    <!-- Add navigation buttons -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-pagination"></div>
+</div>
 <!-- Bug and Patch Summary -->
 <section>
     <h2>Bug Reports</h2>
@@ -59,34 +91,6 @@
         <li><strong>Monthly:</strong> <?= htmlspecialchars($patchStats['monthly']); ?></li>
     </ul>
 </section>
-
-<!-- Daily, Weekly, and Monthly Charts -->
-<div class="chart-container">
-    <h3>Daily Statistics</h3>
-    <canvas id="dailyChart"></canvas>
-</div>
-
-<div class="chart-container">
-    <h3>Weekly Statistics</h3>
-    <canvas id="weeklyChart"></canvas>
-</div>
-
-<div class="chart-container">
-    <h3>Monthly Statistics</h3>
-    <canvas id="monthlyChart"></canvas>
-</div>
-
-<!-- Patch Approval Stats by Username -->
-<div class="chart-container">
-    <h3>Patch Approvals by Username</h3>
-    <canvas id="approvalStatsChart"></canvas>
-</div>
-
-<!-- Bug Reports by Username -->
-<div class="chart-container">
-    <h3>Bugs Reported by Username</h3>
-    <canvas id="bugStatsChart"></canvas>
-</div>
 
 <!-- Unapproved Patches -->
 <section>
@@ -200,6 +204,17 @@
             },
             options: { scales: { y: { beginAtZero: true } } }
         });
+    });
+    const swiper = new Swiper('.swiper-container', {
+        loop: true,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
     });
 </script>
 
