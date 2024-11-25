@@ -130,5 +130,27 @@ class UserService
             throw new Exception("Unable to fetch roles: " . $e->getMessage());
         }
     }
+    public function getUserByUsername($username)
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT username, email FROM users WHERE username = :username");
+            $stmt->bindValue(':username', $username, PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new Exception("Error fetching user details: " . $e->getMessage());
+        }
+    }
+    public function getBugsByUsername($username)
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM bugs WHERE username = :username ORDER BY date DESC");
+            $stmt->bindValue(':username', $username, PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new Exception("Error fetching user's bug reports: " . $e->getMessage());
+        }
+    }
 
 }

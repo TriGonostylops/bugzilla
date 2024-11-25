@@ -42,6 +42,9 @@ class FrontController extends BaseController
             case 'logout':
                 $this->userController->logout();
                 break;
+            case 'profile':
+                $this->userController->profile();
+                break;
             case 'reportBug':
                 $this->bugController->submitBugReport();
                 break;

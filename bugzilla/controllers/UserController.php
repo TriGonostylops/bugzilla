@@ -2,14 +2,17 @@
 
 require_once '../models/User.php';
 require_once '../services/UserService.php';
+require_once '../services/BugService.php';
 
 class UserController
 {
     private $userService;
+    private $bugService;
 
     public function __construct()
     {
         $this->userService = new UserService();
+        $this->bugService = new BugService();
     }
 
     public function register()
@@ -29,7 +32,7 @@ class UserController
 
             try {
                 $this->userService->registerUser($username, $email, $password, $roles);
-                header("Location: index.php?action=success"); // Redirect on successful registration
+                header("Location: index.php?action=login"); // Redirect on successful registration
             } catch (Exception $e) {
                 echo 'Error: ' . $e->getMessage();
             }
@@ -73,4 +76,29 @@ class UserController
         header('Location: index.php?action=index');
         exit();
     }
+    public function profile()
+    {
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?action=login");
+            exit();
+        }
+
+        $username = $_SESSION['user']['username'];
+
+        try {
+            // Fetch user details
+            $user = $this->userService->getUserByUsername($username);
+
+            // Fetch bug reports submitted by the user
+            $bugs = $this->userService->getBugsByUsername($username);
+
+            // Include the profile view
+            include '../views/profile.php';
+        } catch (Exception $e) {
+            $_SESSION['flash_message'] = "Error loading profile: " . $e->getMessage();
+            header("Location: index.php");
+            exit();
+        }
+    }
+
 }
