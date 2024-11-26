@@ -1,5 +1,6 @@
 <?php
 require_once '../services/AdminService.php';
+
 class AdminController
 {
     private $adminService;
@@ -29,7 +30,7 @@ class AdminController
             exit;
         }
 
-        $userId = $_POST['user_id'] ?? null;
+        $userId = $_POST['user_id'] ? $_POST['user_id'] : null;
 
         if ($userId && $this->adminService->deleteUser($userId)) {
             $_SESSION['flash_message'] = "User deleted successfully.";
@@ -47,8 +48,7 @@ class AdminController
             header('Location: index.php');
             exit;
         }
-
-        $bugId = $_POST['bug_id'] ?? null;
+        $bugId = $_POST['bug_id'] ? $_POST['bug_id'] : null;
 
         if ($bugId && $this->adminService->deleteBug($bugId)) {
             $_SESSION['flash_message'] = "Bug report deleted successfully.";
