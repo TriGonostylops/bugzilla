@@ -5,7 +5,9 @@
     <ul class="nav-list">
         <li><a href="index.php" class="nav-link">Home</a></li>
         <li><a href="index.php?action=statistics" class="nav-link">Statistics</a></li>
-
+        <?php if (isset($_SESSION['roles']) && in_array('admin', $_SESSION['roles'])): ?>
+            <li><a href="index.php?action=admin" class="nav-link">Admin Dashboard</a></li>
+        <?php endif; ?>
         <?php if ($isLoggedIn): ?>
             <li><a href="index.php?action=reportBug" class="nav-link">Report a Bug</a></li>
             <li><a href="index.php?action=profile" class="nav-link">Profile</a></li>

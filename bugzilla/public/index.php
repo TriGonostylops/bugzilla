@@ -5,15 +5,18 @@ include '../views/navbar.php';
 require_once '../controllers/IndexController.php';
 require_once '../controllers/UserController.php';
 require_once '../controllers/BugController.php';
+require_once '../controllers/AdminController.php';
 
 abstract class BaseController
 {
+    protected $adminController;
     protected $userController;
     protected $indexController;
     protected $bugController;
 
     public function __construct()
     {
+        $this->adminController = new AdminController();
         $this->userController = new UserController();
         $this->indexController = new IndexController();
         $this->bugController = new BugController();
@@ -69,6 +72,15 @@ class FrontController extends BaseController
                 break;
             default:
                 $this->show404();
+                break;
+            case 'admin':
+                $this->adminController->adminDashboard();
+                break;
+            case 'delete_user':
+                $this->adminController->deleteUser();
+                break;
+            case 'delete_bug':
+                $this->adminController->deleteBug();
                 break;
         }
     }
