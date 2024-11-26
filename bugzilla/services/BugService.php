@@ -70,46 +70,33 @@ class BugService
             throw new Exception("Error searching bugs: " . $e->getMessage());
         }
     }
-    public function getBugStatistics($interval)
+    // Get bug count for a specific date
+    public function getBugCountForDate($date)
     {
-        try {
-            $query = "SELECT COUNT(*) AS total FROM bugs WHERE DATE(date) >= CURDATE() - INTERVAL :interval DAY";
-            $stmt = $this->db->prepare($query);
-
-            switch ($interval) {
-                case 'daily':
-                    $stmt->bindValue(':interval', 1, PDO::PARAM_INT);
-                    break;
-                case 'weekly':
-                    $stmt->bindValue(':interval', 7, PDO::PARAM_INT);
-                    break;
-                case 'monthly':
-                    $stmt->bindValue(':interval', 30, PDO::PARAM_INT);
-                    break;
-                default:
-                    throw new Exception("Invalid interval specified.");
-            }
-
-            $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-        } catch (Exception $e) {
-            throw new Exception("Error fetching bug statistics: " . $e->getMessage());
-        }
+        $query = "SELECT COUNT(*) AS total FROM bugs WHERE DATE(date) = :date";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':date', $date);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
+
+    // Get bug count for a date range
+    public function getBugCountForRange($startDate, $endDate)
+    {
+        $query = "SELECT COUNT(*) AS total FROM bugs WHERE DATE(date) BETWEEN :startDate AND :endDate";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':startDate', $startDate);
+        $stmt->bindValue(':endDate', $endDate);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
+    // Get bugs reported by users
     public function getBugStatsByUser()
     {
-        try {
-            $stmt = $this->db->prepare("
-            SELECT b.username, COUNT(b.b_id) AS bug_count
-            FROM bugs b
-            JOIN users u ON b.username = u.username
-            GROUP BY b.username
-        ");
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            throw new Exception("Error fetching bug stats: " . $e->getMessage());
-        }
+        $query = "SELECT username, COUNT(*) AS bug_count FROM bugs GROUP BY username";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
 }

@@ -40,36 +40,37 @@ class IndexController
     }
     public function statistics()
     {
-        try {
-            // Fetching existing bug and patch statistics
-            $bugStats = [
-                'daily' => $this->bugService->getBugStatistics('daily'),
-                'weekly' => $this->bugService->getBugStatistics('weekly'),
-                'monthly' => $this->bugService->getBugStatistics('monthly'),
-            ];
-
-            $patchStats = [
-                'daily' => $this->patchService->getPatchStatistics('daily'),
-                'weekly' => $this->patchService->getPatchStatistics('weekly'),
-                'monthly' => $this->patchService->getPatchStatistics('monthly'),
-            ];
-
-            // Fetching new approval statistics by username
-            $approvalStats = $this->patchService->getApprovalStatsByUsername();
-
-            // Fetching bug reporting statistics by username
-            $userBugStats = $this->bugService->getBugStatsByUser();
-
-            // Fetching unapproved patches from the last 7 days
-            $unapprovedPatches = $this->patchService->getUnapprovedRecentPatches();
-
-            // Including all data for rendering in the statistics view
-            include '../views/statistics.php';
-        } catch (Exception $e) {
-            $_SESSION['flash_message'] = "Error fetching statistics: " . $e->getMessage();
-            header("Location: index.php");
-            exit();
+        $filterDate = "";
+        // 1. Get the selected date from GET request, default to today
+        if(isset($_GET['filter_date'])){
+            $filterDate = $_GET['filter_date'];
+        } else {
+            $filterDate = date("Y-m-d");
         }
+        // 2. Calculate the date ranges for weekly and monthly intervals
+        $startOfWeek = date('Y-m-d', strtotime("$filterDate -6 days")); // Last 7 days
+        $startOfMonth = date('Y-m-d', strtotime("$filterDate -29 days")); // Last 30 days
+
+
+        // 4. Fetch data for statistics
+        $bugStats = [
+            'daily' => $this->bugService->getBugCountForDate($filterDate),
+            'weekly' => $this->bugService->getBugCountForRange($startOfWeek, $filterDate),
+            'monthly' => $this->bugService->getBugCountForRange($startOfMonth, $filterDate),
+        ];
+
+        $patchStats = [
+            'daily' => $this->patchService->getPatchCountForDate($filterDate),
+            'weekly' => $this->patchService->getPatchCountForRange($startOfWeek, $filterDate),
+            'monthly' => $this->patchService->getPatchCountForRange($startOfMonth, $filterDate),
+        ];
+
+        $approvalStats = $this->patchService->getApprovalStatsByUser();
+        $userBugStats = $this->bugService->getBugStatsByUser();
+        $unapprovedPatches = $this->patchService->getUnapprovedPatchesLast7Days();
+
+        // 5. Pass the variables to the view
+        include '../views/statistics.php';
     }
 
 }

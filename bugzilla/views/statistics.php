@@ -4,11 +4,15 @@
     <link rel="stylesheet" href="../public/styles/styles.css">
     <meta charset="UTF-8">
     <title>Statistics</title>
-<!--    GRAPH INCLUDE    -->
+    <!--    GRAPH INCLUDE    -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!--    SWIPER INCLUDE    -->
+    <!--    SWIPER INCLUDE    -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <style>
         .chart-container {
@@ -45,6 +49,7 @@
     <p style="color: red;"><?= htmlspecialchars($_SESSION['flash_message']); ?></p>
     <?php unset($_SESSION['flash_message']); ?>
 <?php endif; ?>
+
 <div class="swiper-container">
     <div class="swiper-wrapper">
         <div class="swiper-slide">
@@ -60,11 +65,11 @@
             <canvas id="monthlyChart"></canvas>
         </div>
         <div class="swiper-slide">
-            <h3>Patch Approvals by Username</h3>
+            <h3>All patch approvals by username</h3>
             <canvas id="approvalStatsChart"></canvas>
         </div>
         <div class="swiper-slide">
-            <h3>Bugs Reported by Username</h3>
+            <h3>All bugs reported by Username</h3>
             <canvas id="bugStatsChart"></canvas>
         </div>
     </div>
@@ -73,6 +78,23 @@
     <div class="swiper-button-prev"></div>
     <div class="swiper-pagination"></div>
 </div>
+<form id="statisticsFilterForm" action="index.php?action=statistics" method="GET">
+    <label for="filterDate">Select Date:</label>
+    <input type="text" id="filterDate" name="filter_date" placeholder="YYYY-MM-DD">
+    <button type="submit">Generate Statistics</button>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        flatpickr("#filterDate", {
+            enableTime: false,
+            dateFormat: "Y-m-d",
+            defaultDate: new Date(),
+        });
+    });
+</script>
+
 <!-- Bug and Patch Summary -->
 <section>
     <h2>Bug Reports</h2>
@@ -138,6 +160,8 @@
             },
             options: { scales: { y: { beginAtZero: true } } }
         });
+        console.log(bugStats);
+        console.log(patchStats);
 
         // Weekly Chart
         new Chart(document.getElementById('weeklyChart').getContext('2d'), {

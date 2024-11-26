@@ -25,6 +25,11 @@ class FrontController extends BaseController
 {
     public function route($action)
     {
+        if (isset($_GET['filter_date']) && !isset($_GET['action'])) {
+            header('Location: index.php?action=statistics&filter_date=' . urlencode($_GET['filter_date']));
+            exit;
+        }
+
         switch ($action) {
             case 'index':
                 $this->indexController->index();
