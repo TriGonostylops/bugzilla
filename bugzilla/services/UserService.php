@@ -104,6 +104,7 @@ class UserService
             throw new Exception("Unable to fetch roles: " . $e->getMessage());
         }
     }
+
     public function getRolesByUserId($userId)
     {
         try {
@@ -130,6 +131,7 @@ class UserService
             throw new Exception("Unable to fetch roles: " . $e->getMessage());
         }
     }
+
     public function getUserByUsername($username)
     {
         try {
@@ -141,10 +143,17 @@ class UserService
             throw new Exception("Error fetching user details: " . $e->getMessage());
         }
     }
+
     public function getBugsByUsername($username)
     {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM bugs WHERE username = :username ORDER BY date DESC");
+            $stmt = $this->db->prepare("
+            SELECT bugs.* 
+            FROM bugs 
+            INNER JOIN users ON bugs.u_id = users.u_id 
+            WHERE users.username = :username 
+            ORDER BY bugs.date DESC
+        ");
             $stmt->bindValue(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -152,18 +161,27 @@ class UserService
             throw new Exception("Error fetching user's bug reports: " . $e->getMessage());
         }
     }
+
     public function countPatchesByUser($username)
     {
+        $query = "
+        SELECT COUNT(*) AS patch_count 
+        FROM patches p
+        INNER JOIN users u ON p.u_id = u.u_id
+        WHERE u.username = :username
+    ";
         try {
-            $stmt = $this->db->prepare("SELECT COUNT(*) AS patch_count FROM patches WHERE username = :username");
-            $stmt->bindValue(':username', $username, PDO::PARAM_STR);
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
+
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result['patch_count'];
-        } catch (Exception $e) {
-            throw new Exception("Error counting patches: " . $e->getMessage());
+            return $result ? (int) $result['patch_count'] : 0; // Return 0 if no result is found
+        } catch (PDOException $e) {
+            throw new Exception("Database query error: " . $e->getMessage());
         }
     }
+
     public function countAcceptedPatchesByUser($userId)
     {
         try {

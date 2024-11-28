@@ -42,10 +42,10 @@ try {
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
 
-        <label for="roles">Roles:</label><br>
+        <label for="roles">Roles:</label><br><br>
         <?php foreach ($roles as $role): ?>
-            <input type="checkbox" id="role<?= $role->getId() ?>" name="roles[]" value="<?= htmlspecialchars($role->getId()) ?>">
             <label for="role<?= $role->getId() ?>"><?= htmlspecialchars($role->getRole()) ?></label><br>
+            <input type="checkbox" id="role<?= $role->getId() ?>" name="roles[]" value="<?= htmlspecialchars($role->getId()) ?>">
         <?php endforeach; ?>
 
         <button type="submit">Register</button>

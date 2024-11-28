@@ -14,15 +14,25 @@ class BugService
             throw new Exception("Database connection error.");
         }
     }
-// Insert a bug into the database
+
     public function saveBug(Bug $bug)
     {
         try {
-            $stmt = $this->db->prepare("INSERT INTO bugs (username, title, description, system_requirements, date) 
-                                    VALUES (:username, :title, :description, :system_requirements, :date)");
-
-            // Use bindValue() instead of bindParam() to bind values directly
+            // Fetch u_id based on the provided username
+            $stmt = $this->db->prepare("SELECT u_id FROM users WHERE username = :username");
             $stmt->bindValue(':username', $bug->getUsername());
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$user) {
+                throw new Exception("User not found.");
+            }
+            $u_id = $user['u_id'];
+
+            // Insert bug into the database with the u_id
+            $stmt = $this->db->prepare("INSERT INTO bugs (u_id, title, description, system_requirements, date) 
+                                        VALUES (:u_id, :title, :description, :system_requirements, :date)");
+            $stmt->bindValue(':u_id', $u_id, PDO::PARAM_INT);
             $stmt->bindValue(':title', $bug->getTitle());
             $stmt->bindValue(':description', $bug->getDescription());
             $stmt->bindValue(':system_requirements', $bug->getSystemRequirements());
@@ -33,20 +43,34 @@ class BugService
             throw new Exception("Error saving bug report: " . $e->getMessage());
         }
     }
+
     public function getAllBugs()
     {
         try {
-            $stmt = $this->db->prepare("SELECT b_id, username, title, date FROM bugs ORDER BY date DESC");
+            // Join bugs table with users to fetch username based on u_id
+            $stmt = $this->db->prepare(
+                "SELECT b.b_id, u.username, b.title, b.date 
+                FROM bugs b 
+                JOIN users u ON b.u_id = u.u_id 
+                ORDER BY b.date DESC"
+            );
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             throw new Exception("Error fetching bugs: " . $e->getMessage());
         }
     }
+
     public function getBugById($bugId)
     {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM bugs WHERE b_id = :b_id");
+            // Join bugs table with users to fetch username based on u_id
+            $stmt = $this->db->prepare(
+                "SELECT b.*, u.username 
+                FROM bugs b
+                JOIN users u ON b.u_id = u.u_id
+                WHERE b.b_id = :b_id"
+            );
             $stmt->bindValue(':b_id', $bugId, PDO::PARAM_INT);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -54,14 +78,18 @@ class BugService
             throw new Exception("Error fetching bug details: " . $e->getMessage());
         }
     }
+
     public function searchBugs($query)
     {
         try {
+            // Join bugs table with users to fetch username based on u_id
             $stmt = $this->db->prepare(
-                "SELECT * FROM bugs 
-             WHERE LOWER(username) LIKE LOWER(:query) 
-             OR LOWER(title) LIKE LOWER(:query) 
-             ORDER BY title ASC, date DESC"
+                "SELECT b.*, u.username 
+                FROM bugs b
+                JOIN users u ON b.u_id = u.u_id
+                WHERE LOWER(u.username) LIKE LOWER(:query) 
+                OR LOWER(b.title) LIKE LOWER(:query) 
+                ORDER BY b.title ASC, b.date DESC"
             );
             $stmt->bindValue(':query', '%' . strtolower($query) . '%', PDO::PARAM_STR);
             $stmt->execute();
@@ -70,33 +98,48 @@ class BugService
             throw new Exception("Error searching bugs: " . $e->getMessage());
         }
     }
-    // Get bug count for a specific date
+
     public function getBugCountForDate($date)
     {
-        $query = "SELECT COUNT(*) AS total FROM bugs WHERE DATE(date) = :date";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindValue(':date', $date);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        try {
+            $query = "SELECT COUNT(*) AS total FROM bugs WHERE DATE(date) = :date";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindValue(':date', $date);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        } catch (Exception $e) {
+            throw new Exception("Error counting bugs for date: " . $e->getMessage());
+        }
     }
 
-    // Get bug count for a date range
     public function getBugCountForRange($startDate, $endDate)
     {
-        $query = "SELECT COUNT(*) AS total FROM bugs WHERE DATE(date) BETWEEN :startDate AND :endDate";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindValue(':startDate', $startDate);
-        $stmt->bindValue(':endDate', $endDate);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        try {
+            $query = "SELECT COUNT(*) AS total FROM bugs WHERE DATE(date) BETWEEN :startDate AND :endDate";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindValue(':startDate', $startDate);
+            $stmt->bindValue(':endDate', $endDate);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        } catch (Exception $e) {
+            throw new Exception("Error counting bugs for date range: " . $e->getMessage());
+        }
     }
 
-    // Get bugs reported by users
     public function getBugStatsByUser()
     {
-        $query = "SELECT username, COUNT(*) AS bug_count FROM bugs GROUP BY username";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            // Join bugs table with users to get bug count by username
+            $query = "SELECT u.username, COUNT(*) AS bug_count
+                      FROM bugs b
+                      JOIN users u ON b.u_id = u.u_id
+                      GROUP BY u.username";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new Exception("Error fetching bug stats by user: " . $e->getMessage());
+        }
     }
 }
+

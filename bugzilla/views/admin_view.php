@@ -59,7 +59,6 @@
             <td><?= htmlspecialchars($bug['username']); ?></td>
             <td><?= htmlspecialchars($bug['title']); ?></td>
             <td><?= htmlspecialchars($bug['description']); ?></td>
-            <td><?= htmlspecialchars($bug['system_requirements']); ?></td>
             <td><?= htmlspecialchars($bug['date']); ?></td>
             <td>
                 <form action="index.php?action=delete_bug" method="POST" style="display: inline;">

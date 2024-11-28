@@ -8,6 +8,15 @@
 </head>
 <body>
 <h1>Bug Details</h1>
+<!-- Flash Message Section -->
+<?php if (isset($_SESSION['flash_message'])): ?>
+    <div class="flash-message <?php echo isset($_SESSION['flash_message_type']) ? $_SESSION['flash_message_type'] : ''; ?>">
+        <?php
+        echo $_SESSION['flash_message'];
+        unset($_SESSION['flash_message']);
+        ?>
+    </div>
+<?php endif; ?>
 
 <?php if ($bug): ?>
     <!-- Bug Information Section -->

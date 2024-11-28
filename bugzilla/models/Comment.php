@@ -5,13 +5,13 @@ class Comment
     private $c_id;
     private $message;
     private $date;
-    private $username;
+    private $userId;
     private $bug_id;
 
-    public function __construct($message, $username, $bug_id, $date = null)
+    public function __construct($message, $userId, $bug_id, $date = null)
     {
         $this->message = $message;
-        $this->username = $username;
+        $this->userId = $userId;
         $this->bug_id = $bug_id; // Set bug_id
         $this->date = $date ?: date('Y-m-d H:i:s');
     }
@@ -36,9 +36,9 @@ class Comment
         return $this->date;
     }
 
-    public function getUsername()
+    public function getuserId()
     {
-        return $this->username;
+        return $this->userId;
     }
 
     public function getBugId()

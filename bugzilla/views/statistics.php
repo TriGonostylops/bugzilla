@@ -53,6 +53,7 @@
         <p style="color: red;"><?= htmlspecialchars($_SESSION['flash_message']); ?></p>
         <?php unset($_SESSION['flash_message']); ?>
     <?php endif; ?>
+<section>
 
     <div class="swiper-container">
         <div class="swiper-wrapper">
@@ -82,13 +83,16 @@
         <div class="swiper-button-prev"></div>
         <div class="swiper-pagination"></div>
     </div>
+</section>
+
+</div>
+<section>
     <form id="statisticsFilterForm" action="index.php?action=statistics" method="GET">
         <label for="filterDate">Select Date:</label>
         <input type="text" id="filterDate" name="filter_date" placeholder="YYYY-MM-DD">
         <button type="submit">Generate Statistics</button>
     </form>
-
-</div>
+</section>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
