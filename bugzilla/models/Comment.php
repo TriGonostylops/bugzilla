@@ -36,18 +36,18 @@ class Comment
         return $this->date;
     }
 
-    public function getuserId()
+    public function getUserName()
     {
         return $this->userId;
     }
 
     public function getBugId()
     {
-        return $this->bug_id; // Getter for bug_id
+        return $this->bug_id;
     }
 
     public function setBugId($bug_id)
     {
-        $this->bug_id = $bug_id; // Setter for bug_id
+        $this->bug_id = $bug_id;
     }
 }

@@ -44,8 +44,17 @@ try {
 
         <label for="roles">Roles:</label><br><br>
         <?php foreach ($roles as $role): ?>
-            <label for="role<?= $role->getId() ?>"><?= htmlspecialchars($role->getRole()) ?></label><br>
-            <input type="checkbox" id="role<?= $role->getId() ?>" name="roles[]" value="<?= htmlspecialchars($role->getId()) ?>">
+            <?php if (strtolower($role->getRole()) === 'reporter'): ?>
+                <!-- Always checked and disabled for the "Reporter" role -->
+                <label for="role<?= $role->getId() ?>"><?= htmlspecialchars($role->getRole()) ?></label><br>
+                <input type="checkbox" id="role<?= $role->getId() ?>" name="roles[]" value="<?= htmlspecialchars($role->getId()) ?>" checked disabled>
+                <!-- Hidden input ensures the "Reporter" role is submitted with the form -->
+                <input type="hidden" name="roles[]" value="<?= htmlspecialchars($role->getId()) ?>">
+            <?php else: ?>
+                <!-- Render other roles as normal -->
+                <label for="role<?= $role->getId() ?>"><?= htmlspecialchars($role->getRole()) ?></label><br>
+                <input type="checkbox" id="role<?= $role->getId() ?>" name="roles[]" value="<?= htmlspecialchars($role->getId()) ?>">
+            <?php endif; ?>
         <?php endforeach; ?>
 
         <button type="submit">Register</button>

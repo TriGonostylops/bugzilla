@@ -29,7 +29,7 @@ class PatchService
             $stmt->bindValue(':is_approved', $patch->getIsApproved(), PDO::PARAM_INT);
             $stmt->bindValue(':date', $patch->getDate());
             $stmt->bindValue(':message', $patch->getMessage());
-            $stmt->bindValue(':u_id', $patch->getUserId()); // Save u_id instead of username
+            $stmt->bindValue(':u_id', $patch->getUserId());
             $stmt->bindValue(':bug_id', $patch->getBugId(), PDO::PARAM_INT);
 
             $stmt->execute();
@@ -170,5 +170,44 @@ class PatchService
             throw new Exception("Error fetching unapproved patches from the last 7 days: " . $e->getMessage());
         }
     }
+    public function getPatchesByBugId($bugId)
+    {
+        try {
+            // SQL query to join the patches table with the users table
+            $stmt = $this->db->prepare("
+            SELECT p.*, u.username 
+            FROM patches p
+            JOIN users u ON p.u_id = u.u_id
+            WHERE p.bug_id = :bug_id
+            ORDER BY p.date DESC
+        ");
 
+            // Bind the bug_id parameter
+            $stmt->bindValue(':bug_id', $bugId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Fetch and return the results, including username
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new Exception("Error fetching patches: " . $e->getMessage());
+        }
+    }
+    public function setPatchApproved($patchId)
+    {
+        try {
+            // Update the patch's 'is_approved' field to 1 (approved)
+            $stmt = $this->db->prepare("UPDATE patches SET is_approved = 1 WHERE p_id = :patch_id");
+            $stmt->bindValue(':patch_id', $patchId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Optionally, you could check if any rows were updated
+            if ($stmt->rowCount() > 0) {
+                return true; // Successfully approved the patch
+            } else {
+                return false; // Patch ID not found or no update performed
+            }
+        } catch (Exception $e) {
+            throw new Exception("Error updating patch approval: " . $e->getMessage());
+        }
+    }
 }

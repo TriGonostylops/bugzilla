@@ -7,14 +7,14 @@ class Patch
     private $is_approved;
     private $date;
     private $message;
-    private $username;
+    private $userId;
     private $bug_id;
 
-    public function __construct($code, $message, $username, $bug_id, $is_approved = 0, $date = null)
+    public function __construct($code, $message, $userId, $bug_id, $is_approved = 0, $date = null)
     {
         $this->code = $code;
         $this->message = $message;
-        $this->username = $username;
+        $this->userId = $userId;
         $this->bug_id = $bug_id;
         $this->is_approved = $is_approved;
         $this->date = $date ?: date('Y-m-d H:i:s');
@@ -35,9 +35,9 @@ class Patch
         return $this->message;
     }
 
-    public function getUsername()
+    public function getuserId()
     {
-        return $this->username;
+        return $this->userId;
     }
 
     public function getBugId()
