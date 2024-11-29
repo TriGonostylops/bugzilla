@@ -16,7 +16,6 @@ class PatchService
         }
     }
 
-    // Save a patch with u_id instead of username
     public function savePatch(Patch $patch)
     {
         try {
@@ -26,19 +25,17 @@ class PatchService
             );
 
             $stmt->bindValue(':code', $patch->getCode());
-            $stmt->bindValue(':is_approved', $patch->getIsApproved(), PDO::PARAM_INT);
+            $stmt->bindValue(':is_approved', 0, PDO::PARAM_INT);
             $stmt->bindValue(':date', $patch->getDate());
             $stmt->bindValue(':message', $patch->getMessage());
             $stmt->bindValue(':u_id', $patch->getUserId());
             $stmt->bindValue(':bug_id', $patch->getBugId(), PDO::PARAM_INT);
-
             $stmt->execute();
         } catch (Exception $e) {
             throw new Exception("Error saving patch: " . $e->getMessage());
         }
     }
 
-    // Approve a patch by saving the relationship between patch and user
     public function approvePatch($patchId, $userId)
     {
         try {
@@ -55,7 +52,6 @@ class PatchService
         }
     }
 
-    // Check if a user has already approved a patch
     public function checkIfUserApprovedPatch($patchId, $userId)
     {
         try {
@@ -74,7 +70,6 @@ class PatchService
         }
     }
 
-    // Get the number of approvals for a patch
     public function getPatchApprovalCount($patchId)
     {
         try {
@@ -92,7 +87,6 @@ class PatchService
         }
     }
 
-    // Get patch details by patch ID with associated username
     public function getPatchById($patchId)
     {
         try {
@@ -110,7 +104,6 @@ class PatchService
             throw new Exception("Error fetching patch details: " . $e->getMessage());
         }
     }
-    // Get patch count for a specific date
     public function getPatchCountForDate($date)
     {
         try {

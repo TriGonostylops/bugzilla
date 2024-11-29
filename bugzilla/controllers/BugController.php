@@ -111,12 +111,13 @@ class BugController
             header("Location: index.php?action=login");
             exit();
         }
+        $commentService = new CommentService();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['code'], $_POST['message'], $_GET['bug_id']) && is_numeric($_GET['bug_id'])) {
             $bugId = intval($_GET['bug_id']);
             $code = trim($_POST['code']);
             $message = trim($_POST['message']);
-            $username = $_SESSION['user']['username'];
+            $username = $commentService->getUserIdByUsername($_SESSION['user']['username']);
             $date = date('Y-m-d H:i:s');
 
             if (empty($code) || empty($message)) {

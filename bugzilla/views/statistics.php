@@ -15,11 +15,6 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <style>
-        .chart-container {
-            margin: 20px 0;
-            text-align: center;
-        }
-
         canvas {
             max-width: 100%;
             height: auto;
@@ -54,7 +49,6 @@
         <?php unset($_SESSION['flash_message']); ?>
     <?php endif; ?>
 <section>
-
     <div class="swiper-container">
         <div class="swiper-wrapper">
             <div class="swiper-slide">
@@ -83,16 +77,17 @@
         <div class="swiper-button-prev"></div>
         <div class="swiper-pagination"></div>
     </div>
-</section>
 
-</div>
-<section>
+<div>
     <form id="statisticsFilterForm" action="index.php?action=statistics" method="GET">
         <label for="filterDate">Select Date:</label>
         <input type="text" id="filterDate" name="filter_date" placeholder="YYYY-MM-DD">
         <button type="submit">Generate Statistics</button>
     </form>
+</div>
 </section>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -240,6 +235,7 @@
     });
     const swiper = new Swiper('.swiper-container', {
         loop: true,
+        autoHeight: true, // Enable dynamic height adjustment
         navigation: {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
@@ -249,6 +245,7 @@
             clickable: true,
         },
     });
+
 </script>
 
 <a href="index.php">Back to Index</a>

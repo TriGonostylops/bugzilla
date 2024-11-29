@@ -382,9 +382,14 @@ li {
     font-weight: bold;
 }
 .swiper-container {
-    width: 100%;
-    overflow: hidden;
+    width: 90%;
+    max-width: 1200px;
     margin: 20px auto;
+}
+
+.swiper-wrapper {
+    display: flex;
+    align-items: stretch; /* Ensure all slides fill the height */
 }
 
 .swiper-slide {
@@ -392,8 +397,25 @@ li {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    height: auto; /* Allow slide height to adjust to content */
 }
 
-.swiper-slide h3 {
-    margin-bottom: 20px;
+.swiper-slide canvas {
+    max-width: 90%;
+    height: auto; /* Maintain canvas aspect ratio */
+}
+
+.swiper-pagination {
+    margin-top: 10px;
+}
+
+.swiper-button-next, .swiper-button-prev {
+    color: #007bff; /* Match theme */
+}
+
+.swiper-button-next:hover, .swiper-button-prev:hover {
+    color: #0056b3; /* Darker shade on hover */
 }
