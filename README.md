@@ -56,3 +56,5 @@ A felhasználók szerepkörük szerint a következők lehetnek:
 - Egy felhasználónak több kommentje lehet.
 - Egy hibajelentésnek több javítási javaslata lehet.
 - Egy felhasználónak több szerepköre lehet.
+
+## This project was made in a week, I look forward to look back at this and cringe c:
